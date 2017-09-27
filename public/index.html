@@ -1,0 +1,83 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+               
+</head>
+
+<body>
+    <script>
+        $(document).ready(function () {
+            console.log("ready!");
+            
+            function sendfcm(key, topic, title, body) {
+                var notificationData = {
+                    "to": "/topics/" + topic,
+                    "notification": {
+                        "title": title,
+                        "body": body,
+                    }
+                }
+
+                $.ajax({
+                    url: 'https://fcm.googleapis.com/fcm/send',
+                    type: 'post',
+                    data: JSON.stringify(notificationData),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'key=' + key
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                       console.info(data);
+                    }
+                });
+            }
+            //sendfcm(key, 'news', '우왕', '으하하');
+            $('#sendButton').click( function(){
+                console.log('클릭');
+                sendfcm($('#key').val() , $('#topic').val() ,  $('#title').val(),  $('#body').val())
+            })
+        });
+
+    </script>
+
+    <div class="row">
+        <form class="col s12">
+            <div class="row">
+                    <div class="input-field col s12">
+                        <input id="key" type="text" class="validate">
+                        <label for="key">서버키</label>
+                    </div>
+                </div>    
+                <div class="row">
+                        <div class="input-field col s12">
+                            <input id="topic" type="text" class="validate">
+                            <label for="topic">토픽</label>
+                        </div>
+                    </div>                        
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="title" type="text" class="validate">
+                    <label for="title">제목</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="body" type="text" class="validate">
+                    <label for="body">내용</label>
+                </div>
+            </div>
+            <div class="row center-align">
+                    <a id="sendButton" class="waves-effect waves-light btn-large "><i class="material-icons left">send</i>보내기</a>
+            </div>
+            
+        </form>
+    </div>
+</body>
